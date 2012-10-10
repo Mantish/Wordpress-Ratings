@@ -1,38 +1,58 @@
 /* Ratings */
-
-.rating-widget {
-	height:54px;
-	width:42px;
-	padding:3px;
+.rating-title {
+	font-weight: normal;
+	font-size: 14px;
+	margin: 10px 0;
 }
-
-.rating-icon {
-	height:27px;
-	width:42px;
-	display:inline-block;
-	background-image:url("sprites.png?v=1");
-	background-repeat:no-repeat;
-	overflow:hidden;
+.rating-widget {
+}
+.rating-widget a, .fake-rating-button {
+	background: #252525;
+	border-radius: 3px;
+	color: #fff;
+	display: inline-block;
+	margin-right: 15px;
+	padding: 6px 10px;
+	width: 150px;
+}
+.rating-widget a:before, .fake-rating-button:before {
+	color: #fff;
 }
 
 .rating-up-inactive:hover, .rating-down-inactive:hover {
 	cursor: pointer;
 }
-
-/* Sprites */
-
 .rating-up-inactive {
 	background-position:0 -36px;
 }
-
 .rating-down-inactive{
 	background-position:0 -73px;
 }
-
 .rating-up-active, .rating-up-inactive:hover{
 	background-position:0 -1px;
 }
-
 .rating-down-active, .rating-down-inactive:hover{
 	background-position:0 -103px;
+}
+
+.rating-count {
+	margin-top: -44px;
+}
+.rating-count span {
+	border-left: 1px solid #000;
+	color: #fff;
+	display: inline-block;
+	margin-left: 125px;
+	padding: 6px 0 6px 14px;
+	width: 45px;
+}
+.visitor-count {
+	margin-top: 0;
+}
+.visitor-count span {
+	display: inline;
+	margin-left: 15px;
+}
+.visitor-count div:nth-child(2) span {
+	margin-left: 45px;
 }

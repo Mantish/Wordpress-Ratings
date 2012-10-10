@@ -3,7 +3,7 @@
 Plugin Name: Rockhoist Ratings
 Version: 1.2
 Plugin URI: http://twitter.com/blairyeah
-Description: A YouTube style rating widget for posts. 
+Description: A YouTube style rating widget for posts.
 Author: B. Jordan
 Author URI: http://www.twitter.com/blairyeah
 
@@ -28,7 +28,7 @@ http://www.gnu.org/licenses/gpl.txt
 */
 
 // Required for nonces.
-require_once(ABSPATH .'wp-includes/pluggable.php'); 
+require_once(ABSPATH .'wp-includes/pluggable.php');
 
 // Change Log
 $current_version = array('1.0');
@@ -47,9 +47,9 @@ function rhr_activate() {
 	// Create the rh_ratings table.
 
 	$table_name = $wpdb->prefix . "rh_ratings";
-	
+
 	if( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) != $table_name ) {
-	
+
 		$sql = "CREATE TABLE " . $table_name . " (
 			user_id int(9) NOT NULL,
 			post_id int(9) NOT NULL,
@@ -60,7 +60,7 @@ function rhr_activate() {
 
 		dbDelta( $sql );
 	}
- 
+
 	add_option("rhr_db_version", $rhr_db_version);
 }
 
@@ -85,17 +85,17 @@ function rhr_deactivate() {
 // Hook for registering the uninstall function upon plugin deactivation.
 register_deactivation_hook( __FILE__, 'rhr_deactivate' );
 
-function rhr_set_rating( $args = '' ) { 
+function rhr_set_rating( $args = '' ) {
 
-	global $wpdb;			
+	global $wpdb;
 
-	// count the number of times the user has rated, excluding 
+	// count the number of times the user has rated, excluding
 	// the rating from the filter.
 	$filter = $args;
 	unset( $filter['rating'] );
 
 	$rating_count = rhb_count_ratings( $filter );
-	
+
 	if ( $rating_count == 0 ) {
 		rhr_insert_rating( $args );
 	} elseif ( $rating_count == 1 ) {
@@ -107,17 +107,17 @@ function rhr_insert_rating( $args = '' ) {
 
 	global $wpdb;
 
-	$wpdb->insert( $wpdb->prefix . 'rh_ratings', 
+	$wpdb->insert( $wpdb->prefix . 'rh_ratings',
 		array( 'user_id' => $args['user_ID'],
 			'post_id' => $args['post_ID'],
-			'rating' => $args['rating']), 
+			'rating' => $args['rating']),
 		array( '%d', '%d', '%s' ) );
 }
 
-function rhr_update_rating( $args = '' ) { 
+function rhr_update_rating( $args = '' ) {
 
 	global $wpdb;
-	
+
 	$wpdb->query( $wpdb->prepare( 'UPDATE ' . $wpdb->prefix . 'rh_ratings' . ' SET rating = %s WHERE user_id = %d AND post_id = %d', $args['rating'], $args['user_ID'], $args['post_ID'] ) );
 
 	$wpdb->show_errors();
@@ -126,13 +126,13 @@ function rhr_update_rating( $args = '' ) {
 function rhb_count_ratings( $filter = '' ) {
 
 	global $wpdb;
-	
+
 	$sql = 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'rh_ratings WHERE 1=1 ';
-	
+
 	// If a post ID was entered.
 	if ( array_key_exists('post_ID', $filter) ) {
 		$post_ID = $filter['post_ID'];
-			
+
 		// Append a condition to the SQL.
 		$sql .= " AND post_id = $post_ID";
 	}
@@ -140,7 +140,7 @@ function rhb_count_ratings( $filter = '' ) {
 	// If a user ID was entered.
 	if ( array_key_exists('user_ID', $filter) ) {
 		$user_ID = $filter['user_ID'];
-			
+
 		// Append a condition to the SQL.
 		$sql .= " AND user_id = $user_ID";
 	}
@@ -148,7 +148,7 @@ function rhb_count_ratings( $filter = '' ) {
 	// If a rating was entered.
 	if ( array_key_exists('rating', $filter) ) {
 		$rating = $filter['rating'];
-			
+
 		// Append a condition to the SQL.
 		$sql .= " AND rating = '$rating'";
 	}
@@ -164,7 +164,7 @@ function rhr_the_rating( $content ) {
 
 	// If the user is logged in, display the rating control.
 	if ( is_user_logged_in() ) {
- 
+
 		global $current_user;
 		get_currentuserinfo();
 
@@ -181,9 +181,9 @@ function rhr_the_rating( $content ) {
 		$downClass = ( $userRatingCountDown == 1 ) ? 'rating-down-active' : 'rating-down-inactive';
 
 		$content = sprintf('%s
+			<h4 class="rating-title">¿STUPID OR NOT STUPID?</h4>
 			<div class="rating-widget">
-				<a id="rate-up-%s" class="rating-icon %s"></a>
-				<a id="rate-down-%s" class="rating-icon %s"></a>
+				<a id="rate-up-%s" class="icon thumbsup %s">NOT STUPID</a><a id="rate-down-%s" class="icon thumbsdown %s">STUPID</a>
 			</div> <!-- /rating-widget -->',
 			$content,
 			$post->ID,
@@ -201,29 +201,42 @@ function rhr_the_rating( $content ) {
 		'rating' => 'down' ) );
 
 
-	$content = sprintf('%s
-		<div class="rating-count">
-		Up votes: <span id="rating-count-up-%s" class="rating-count-up">%s</span>
-		Down votes: <span id="rating-count-down-%s" class="rating-count-down">%s</span>
-		</div>',
-		$content,
-		$post->ID,
-		$ratingCountUp,
-		$post->ID,
-		$ratingCountDown
-	);
+	if ( is_user_logged_in() ) {
+		$content = sprintf('%s
+			<div class="rating-count">
+				<span id="rating-count-up-%s" class="rating-count-up">%s</span><span id="rating-count-down-%s" class="rating-count-down">%s</span>
+			</div>',
+			$content,
+			$post->ID,
+			$ratingCountUp,
+			$post->ID,
+			$ratingCountDown
+		);
+	}else{
+		$content = sprintf('%s
+			<h4 class="rating-title">¿STUPID OR NOT STUPID?</h4>
+			<div class="rating-count visitor-count">
+				<div class="icon thumbsup fake-rating-button">NOT STUPID <span id="rating-count-up-%s" class="rating-count-up">%s</span></div><div class="icon thumbsdown fake-rating-button">STUPID <span id="rating-count-down-%s" class="rating-count-down">%s</span></div>
+			</div>',
+			$content,
+			$post->ID,
+			$ratingCountUp,
+			$post->ID,
+			$ratingCountDown
+		);
+	}
 
 	return $content;
 }
 
-add_filter('the_content', 'rhr_the_rating');
+add_filter('woocommerce_short_description', 'rhr_the_rating');
 
 // Link to Rockhoist Ratings stylesheet and apply some custom styles
 function rhr_css() {
 	echo "\n".'<link rel="stylesheet" href="'. WP_PLUGIN_URL . '/rockhoist-ratings/ratings.css" type="text/css" media="screen" />'."\n";
 }
 
-add_action('wp_print_styles', 'rhr_css'); // Rockhoist Ratings stylesheet 
+add_action('wp_print_styles', 'rhr_css'); // Rockhoist Ratings stylesheet
 
 // embed the javascript file that makes the AJAX request
 function rhr_init() {
@@ -234,9 +247,9 @@ function rhr_init() {
 		wp_enqueue_script('jquery');
 
 		wp_enqueue_script( 'rhr-ajax-request', plugin_dir_url( __FILE__ ) . 'ajax_rate.js', array('jquery'), '1.1', true );
- 	
+
 		// declare the URL to the file that handles the AJAX request (wp-admin/admin-ajax.php)
-		wp_localize_script( 'rhr-ajax-request', 'RockhoistRatingsAjax', array( 
+		wp_localize_script( 'rhr-ajax-request', 'RockhoistRatingsAjax', array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'ratingNonce' => wp_create_nonce('rating-nonce')) );
 	}
@@ -267,7 +280,7 @@ function rhr_ajax_submit() {
 	rhr_set_rating( $args );
 
 	// generate the response
-	$response = json_encode( array( 'success'   => true, 
+	$response = json_encode( array( 'success'   => true,
 					'countup'   => rhb_count_ratings( array( 'post_ID' => $_POST['postID'], 'rating' => 'up') ),
 					'countdown' => rhb_count_ratings( array( 'post_ID' => $_POST['postID'], 'rating' => 'down') ) ) );
 
