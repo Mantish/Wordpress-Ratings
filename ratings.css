@@ -28,7 +28,7 @@ a.rating-up-active, a.rating-down-active {
 }
 
 .rating-count {
-	margin-top: -44px;
+	height: 0;
 }
 .rating-count span {
 	border-left: 1px solid #000;
@@ -36,6 +36,8 @@ a.rating-up-active, a.rating-down-active {
 	display: inline-block;
 	margin-left: 125px;
 	padding: 6px 0 6px 14px;
+	position: relative;
+	top: -30px;
 	width: 45px;
 }
 .visitor-count {

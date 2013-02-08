@@ -184,7 +184,7 @@ function rhr_the_rating( $content ) {
 			<h4 class="rating-title">¿STUPID OR NOT STUPID?</h4>
 			<div class="rating-widget">
 				<a id="rate-up-%s" class="icon thumbsup %s">NOT STUPID</a><a id="rate-down-%s" class="icon thumbsdown %s">STUPID</a>
-			</div> <!-- /rating-widget -->',
+			</div>',
 			$content,
 			$post->ID,
 			$upClass,
