@@ -41,12 +41,13 @@ a.rating-up-active, a.rating-down-active {
 	width: 45px;
 }
 .visitor-count {
-	margin-top: 0;
+	height: auto;
 }
 .visitor-count span {
 	display: inline;
-	margin-left: 15px;
+	margin-left: 20px;
+	position: static;
 }
 .visitor-count div:nth-child(2) span {
-	margin-left: 45px;
+	margin-left: 50px;
 }
