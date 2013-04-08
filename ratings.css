@@ -2,7 +2,10 @@
 .rating-title {
 	font-weight: normal;
 	font-size: 14px;
-	margin: 10px 0;
+	margin: 20px 0 15px !important;
+}
+.rating-link {
+	color: #EB1E34;
 }
 .rating-widget {
 }

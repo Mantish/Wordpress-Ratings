@@ -215,6 +215,7 @@ function rhr_the_rating( $content ) {
 	}else{
 		$content = sprintf('%s
 			<h4 class="rating-title">¿STUPID OR NOT STUPID?</h4>
+			<p><a href="#" class="rating-link" data-reveal-id="login_forms">Ingresa</a> con tu cuenta para votar. Si aún no tienes cuenta, <a href="http://localhost/nso/mi-cuenta/registro/" class="rating-link">registrate!</a></p>
 			<div class="rating-count visitor-count">
 				<div class="icon thumbsup fake-rating-button">NOT STUPID <span id="rating-count-up-%s" class="rating-count-up">%s</span></div><div class="icon thumbsdown fake-rating-button">STUPID <span id="rating-count-down-%s" class="rating-count-down">%s</span></div>
 			</div>',
